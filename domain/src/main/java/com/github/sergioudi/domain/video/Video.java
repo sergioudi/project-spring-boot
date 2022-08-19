@@ -117,6 +117,9 @@ public class Video extends AggregateRoot<VideoID> implements Cloneable {
     public Video update(
             final String aName,
             final String aDescription,
+            final Double aImdb,
+            final CategoryID aCategoryID,
+            final GenreID aGenreID,
             final boolean isActive
     ) {
         if (isActive) {
@@ -126,6 +129,9 @@ public class Video extends AggregateRoot<VideoID> implements Cloneable {
         }
         this.name = aName;
         this.description = aDescription;
+        this.imdb = aImdb;
+        this.categoryID = aCategoryID;
+        this.genreID = aGenreID;
         this.updatedAt = InstantUtils.now();
         return this;
     }
