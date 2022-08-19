@@ -1,5 +1,7 @@
 package com.github.sergioudi.application.video.retrieve.get;
 
+import com.github.sergioudi.domain.category.CategoryID;
+import com.github.sergioudi.domain.genre.GenreID;
 import com.github.sergioudi.domain.video.Video;
 import com.github.sergioudi.domain.video.VideoID;
 
@@ -10,8 +12,8 @@ public record VideoOutput(
         String name,
         String description,
         Double imdb,
-        String categoryID,
-        String genreID,
+        CategoryID categoryID,
+        GenreID genreID,
         boolean isActive,
         Instant createdAt,
         Instant updatedAt,
@@ -24,8 +26,8 @@ public record VideoOutput(
                 aVideo.getName(),
                 aVideo.getDescription(),
                 aVideo.getImdb(),
-                aVideo.getCategoryID().getValue(),
-                aVideo.getGenreID().getValue(),
+                aVideo.getCategoryID(),
+                aVideo.getGenreID(),
                 aVideo.isActive(),
                 aVideo.getCreatedAt(),
                 aVideo.getUpdatedAt(),
