@@ -1,12 +1,14 @@
 package com.github.sergioudi.application.video.update;
 
+import java.util.List;
+
 public record UpdateVideoCommand(
         String id,
         String name,
         String description,
         Double imdb,
         String categoryID,
-        String genreID,
+        List<String> genres,
         boolean isActive
 ) {
 
@@ -16,9 +18,9 @@ public record UpdateVideoCommand(
             final String aDescription,
             final Double aImdb,
             final String aCategoryID,
-            final String aGenreID,
+            final List<String> genres,
             final boolean isActive
     ) {
-        return new UpdateVideoCommand(anId, aName, aDescription, aImdb, aCategoryID, aGenreID, isActive);
+        return new UpdateVideoCommand(anId, aName, aDescription, aImdb, aCategoryID, genres, isActive);
     }
 }

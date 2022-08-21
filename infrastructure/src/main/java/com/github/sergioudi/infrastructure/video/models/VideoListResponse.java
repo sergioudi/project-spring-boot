@@ -9,8 +9,6 @@ public record VideoListResponse(
         @JsonProperty("name") String name,
         @JsonProperty("description") String description,
         @JsonProperty("imdb") Double imdb,
-        @JsonProperty("category_id") String categoryId,
-        @JsonProperty("genre_id") String genreId,
         @JsonProperty("is_active") Boolean active,
         @JsonProperty("created_at") Instant createdAt,
         @JsonProperty("deleted_at") Instant deletedAt

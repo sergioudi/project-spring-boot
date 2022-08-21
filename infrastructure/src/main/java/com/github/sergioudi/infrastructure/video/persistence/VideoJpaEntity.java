@@ -1,15 +1,21 @@
 package com.github.sergioudi.infrastructure.video.persistence;
 
+import com.github.sergioudi.domain.category.Category;
 import com.github.sergioudi.domain.category.CategoryID;
 import com.github.sergioudi.domain.genre.GenreID;
 import com.github.sergioudi.domain.video.Video;
 import com.github.sergioudi.domain.video.VideoID;
+import com.github.sergioudi.infrastructure.category.persistence.CategoryJpaEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
+import javax.persistence.*;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 
 @Entity(name = "Video")
 @Table(name = "video")
@@ -30,8 +36,12 @@ public class VideoJpaEntity {
     @Column(name = "category_id", nullable = false)
     private String categoryID;
 
-    @Column(name = "genre_id", nullable = false)
-    private String genreID;
+    @ManyToOne
+    @MapsId("categoryID")
+    private CategoryJpaEntity category;
+
+    @OneToMany(mappedBy = "video", cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    private Set<VideoGenreJpaEntity> genres;
 
     @Column(name = "active", nullable = false)
     private boolean active;
@@ -54,7 +64,6 @@ public class VideoJpaEntity {
             final String description,
             final Double imdb,
             final String categoryID,
-            final String genreID,
             final boolean active,
             final Instant createdAt,
             final Instant updatedAt,
@@ -65,7 +74,7 @@ public class VideoJpaEntity {
         this.description = description;
         this.imdb = imdb;
         this.categoryID = categoryID;
-        this.genreID = genreID;
+        this.genres = new HashSet<>();;
         this.active = active;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -73,18 +82,22 @@ public class VideoJpaEntity {
     }
 
     public static VideoJpaEntity from(final Video aVideo) {
-        return new VideoJpaEntity(
+        final var anEntity = new VideoJpaEntity(
                 aVideo.getId().getValue(),
                 aVideo.getName(),
                 aVideo.getDescription(),
                 aVideo.getImdb(),
                 aVideo.getCategoryID().getValue(),
-                aVideo.getGenreID().getValue(),
                 aVideo.isActive(),
                 aVideo.getCreatedAt(),
                 aVideo.getUpdatedAt(),
                 aVideo.getDeletedAt()
         );
+
+        aVideo.getGenres()
+                .forEach(anEntity::addGenre);
+
+        return anEntity;
     }
 
     public Video toAggregate() {
@@ -94,12 +107,20 @@ public class VideoJpaEntity {
                 getDescription(),
                 getImdb(),
                 CategoryID.from(getCategoryID()),
-                GenreID.from(getGenreID()),
+                getGenreIDs(),
                 isActive(),
                 getCreatedAt(),
                 getUpdatedAt(),
                 getDeletedAt()
         );
+    }
+
+    private void addGenre(final GenreID anId) {
+        this.genres.add(VideoGenreJpaEntity.from(this, anId));
+    }
+
+    private void removeCategory(final GenreID anId) {
+        this.genres.remove(VideoGenreJpaEntity.from(this, anId));
     }
 
     public String getId() {
@@ -130,13 +151,24 @@ public class VideoJpaEntity {
 
     public String getCategoryID() { return categoryID;  }
 
-    public String getGenreID() { return genreID; }
+    public List<GenreID> getGenreIDs() {
+        return getGenres().stream()
+                .map(it -> GenreID.from(it.getId().getGenreId()))
+                .toList();
+    }
+
+    public Set<VideoGenreJpaEntity> getGenres() {
+        return genres;
+    }
 
     public void setImdb(Double imdb) { this.imdb = imdb; }
 
     public void setCategoryID(String categoryID) { this.categoryID = categoryID; }
 
-    public void setGenreID(String genreID) { this.genreID = genreID; }
+    public VideoJpaEntity setGenres(Set<VideoGenreJpaEntity> genres) {
+        this.genres = genres;
+        return this;
+    }
 
     public boolean isActive() {
         return active;
@@ -168,5 +200,9 @@ public class VideoJpaEntity {
 
     public void setDeletedAt(Instant deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public CategoryJpaEntity getCategory() {
+        return category;
     }
 }

@@ -6,6 +6,7 @@ import com.github.sergioudi.domain.video.Video;
 import com.github.sergioudi.domain.video.VideoID;
 
 import java.time.Instant;
+import java.util.List;
 
 public record VideoOutput(
         VideoID id,
@@ -13,7 +14,7 @@ public record VideoOutput(
         String description,
         Double imdb,
         CategoryID categoryID,
-        GenreID genreID,
+        List<String> genres,
         boolean isActive,
         Instant createdAt,
         Instant updatedAt,
@@ -27,7 +28,9 @@ public record VideoOutput(
                 aVideo.getDescription(),
                 aVideo.getImdb(),
                 aVideo.getCategoryID(),
-                aVideo.getGenreID(),
+                aVideo.getGenres().stream()
+                        .map(GenreID::getValue)
+                        .toList(),
                 aVideo.isActive(),
                 aVideo.getCreatedAt(),
                 aVideo.getUpdatedAt(),

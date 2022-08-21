@@ -55,7 +55,7 @@ public class VideoController implements VideoAPI {
                 input.description(),
                 input.imdb(),
                 input.categoryId(),
-                input.genreId(),
+                input.genres(),
                 input.active() != null ? input.active() : true
         );
 
@@ -94,7 +94,7 @@ public class VideoController implements VideoAPI {
                 input.description(),
                 input.imdb(),
                 input.categoryId(),
-                input.genreId(),
+                input.genres(),
                 input.active() != null ? input.active() : true
         );
 

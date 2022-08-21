@@ -2,11 +2,15 @@ package com.github.sergioudi.domain.video;
 
 import com.github.sergioudi.domain.AggregateRoot;
 import com.github.sergioudi.domain.category.CategoryID;
+import com.github.sergioudi.domain.genre.Genre;
 import com.github.sergioudi.domain.genre.GenreID;
 import com.github.sergioudi.domain.utils.InstantUtils;
 import com.github.sergioudi.domain.validation.ValidationHandler;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class Video extends AggregateRoot<VideoID> implements Cloneable {
@@ -14,7 +18,7 @@ public class Video extends AggregateRoot<VideoID> implements Cloneable {
     private String description;
     private Double imdb;
     private CategoryID categoryID;
-    private GenreID genreID;
+    private List<GenreID> genres;
     private boolean active;
     private Instant createdAt;
     private Instant updatedAt;
@@ -26,7 +30,7 @@ public class Video extends AggregateRoot<VideoID> implements Cloneable {
             final String aDescription,
             final Double aImdb,
             final CategoryID aCategoryID,
-            final GenreID aGenreID,
+            final List<GenreID> genres,
             final boolean isActive,
             final Instant aCreationDate,
             final Instant aUpdateDate,
@@ -37,18 +41,18 @@ public class Video extends AggregateRoot<VideoID> implements Cloneable {
         this.description = aDescription;
         this.imdb = aImdb;
         this.categoryID = aCategoryID;
-        this.genreID = aGenreID;
+        this.genres = genres;
         this.active = isActive;
         this.createdAt = Objects.requireNonNull(aCreationDate, "'createdAt' should not be null");
         this.updatedAt = Objects.requireNonNull(aUpdateDate, "'updatedAt' should not be null");
         this.deletedAt = aDeleteDate;
     }
 
-    public static Video newVideo(final String aName, final String aDescription, Double aImdb,CategoryID aCategoryID, GenreID aGenreID , final boolean isActive) {
+    public static Video newVideo(final String aName, final String aDescription, Double aImdb,CategoryID aCategoryID,final boolean isActive) {
         final var id = VideoID.unique();
         final var now = InstantUtils.now();
         final var deletedAt = isActive ? null : now;
-        return new Video(id, aName, aDescription, aImdb, aCategoryID, aGenreID, isActive, now, now, deletedAt);
+        return new Video(id, aName, aDescription, aImdb, aCategoryID, new ArrayList<>(), isActive, now, now, deletedAt);
     }
 
     public static Video with(
@@ -57,7 +61,7 @@ public class Video extends AggregateRoot<VideoID> implements Cloneable {
             final String description,
             final Double aImdb,
             final CategoryID aCategoryID,
-            final GenreID aGenreID,
+            final List<GenreID> genres,
             final boolean active,
             final Instant createdAt,
             final Instant updatedAt,
@@ -69,7 +73,7 @@ public class Video extends AggregateRoot<VideoID> implements Cloneable {
                 description,
                 aImdb,
                 aCategoryID,
-                aGenreID,
+                genres,
                 active,
                 createdAt,
                 updatedAt,
@@ -84,7 +88,7 @@ public class Video extends AggregateRoot<VideoID> implements Cloneable {
                 aVideo.description,
                 aVideo.imdb,
                 aVideo.categoryID,
-                aVideo.genreID,
+                aVideo.genres,
                 aVideo.isActive(),
                 aVideo.createdAt,
                 aVideo.updatedAt,
@@ -119,7 +123,7 @@ public class Video extends AggregateRoot<VideoID> implements Cloneable {
             final String aDescription,
             final Double aImdb,
             final CategoryID aCategoryID,
-            final GenreID aGenreID,
+            final List<GenreID> genres,
             final boolean isActive
     ) {
         if (isActive) {
@@ -131,7 +135,7 @@ public class Video extends AggregateRoot<VideoID> implements Cloneable {
         this.description = aDescription;
         this.imdb = aImdb;
         this.categoryID = aCategoryID;
-        this.genreID = aGenreID;
+        this.genres = genres;
         this.updatedAt = InstantUtils.now();
         return this;
     }
@@ -157,8 +161,8 @@ public class Video extends AggregateRoot<VideoID> implements Cloneable {
         return categoryID;
     }
 
-    public GenreID getGenreID() {
-        return genreID;
+    public List<GenreID> getGenres() {
+        return Collections.unmodifiableList(genres);
     }
 
     public boolean isActive() {
@@ -184,5 +188,32 @@ public class Video extends AggregateRoot<VideoID> implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    public Video addGenre(final GenreID aGenreID) {
+        if (aGenreID == null) {
+            return this;
+        }
+        this.genres.add(aGenreID);
+        this.updatedAt = InstantUtils.now();
+        return this;
+    }
+
+    public Video addGenres(final List<GenreID> genres) {
+        if (genres == null || genres.isEmpty()) {
+            return this;
+        }
+        this.genres.addAll(genres);
+        this.updatedAt = InstantUtils.now();
+        return this;
+    }
+
+    public Video removeGenre(final GenreID aGenreID) {
+        if (aGenreID == null) {
+            return this;
+        }
+        this.genres.remove(aGenreID);
+        this.updatedAt = InstantUtils.now();
+        return this;
     }
 }

@@ -10,6 +10,7 @@ import com.github.sergioudi.application.video.retrieve.list.DefaultListVideosUse
 import com.github.sergioudi.application.video.retrieve.list.ListVideosUseCase;
 import com.github.sergioudi.application.video.update.DefaultUpdateVideoUseCase;
 import com.github.sergioudi.application.video.update.UpdateVideoUseCase;
+import com.github.sergioudi.domain.genre.GenreGateway;
 import com.github.sergioudi.domain.video.VideoGateway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,19 +19,21 @@ import org.springframework.context.annotation.Configuration;
 public class VideoUseCaseConfig {
 
     private final VideoGateway videoGateway;
+    private final GenreGateway genreGateway;
 
-    public VideoUseCaseConfig(final VideoGateway videoGateway) {
+    public VideoUseCaseConfig(final GenreGateway genreGateway,final VideoGateway videoGateway) {
         this.videoGateway = videoGateway;
+        this.genreGateway = genreGateway;
     }
 
     @Bean
     public CreateVideoUseCase createVideoUseCase() {
-        return new DefaultCreateVideoUseCase(videoGateway);
+        return new DefaultCreateVideoUseCase(genreGateway,videoGateway);
     }
 
     @Bean
     public UpdateVideoUseCase updateVideoUseCase() {
-        return new DefaultUpdateVideoUseCase(videoGateway);
+        return new DefaultUpdateVideoUseCase(genreGateway,videoGateway);
     }
 
     @Bean

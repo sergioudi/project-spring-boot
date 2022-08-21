@@ -14,7 +14,7 @@ public interface VideoApiPresenter {
                 output.description(),
                 output.imdb(),
                 output.categoryID().getValue(),
-                output.genreID().getValue(),
+                output.genres(),
                 output.isActive(),
                 output.createdAt(),
                 output.updatedAt(),
@@ -28,8 +28,6 @@ public interface VideoApiPresenter {
                 output.name(),
                 output.description(),
                 output.imdb(),
-                output.categoryID().getValue(),
-                output.genreID().getValue(),
                 output.isActive(),
                 output.createdAt(),
                 output.deletedAt()
