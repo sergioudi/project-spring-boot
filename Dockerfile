@@ -2,7 +2,6 @@ FROM openjdk:17.0.2-jdk as builder
 RUN mkdir -p /app/source
 COPY . /app/source
 WORKDIR /app/source
-RUN ./gradlew flywayMigrate
 RUN ./gradlew clean build
 
 
