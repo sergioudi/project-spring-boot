@@ -15,7 +15,7 @@ jobs:
       with:
         java-version: 17
     - name: Build with Gradle
-      run: gradlew clean build
+      run: ./gradlew clean build
     - name: Heroku Container Registry login
       env: 
        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
