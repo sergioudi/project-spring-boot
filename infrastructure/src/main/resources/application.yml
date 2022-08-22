@@ -20,8 +20,8 @@ spring:
       auto-commit: false
       connection-timeout: 250 # É uma configuração em milliseconds. O ideal é manter baixo para que estoure timeout logo e não prenda as threads.
       max-lifetime: 600000 # Tempo máximo que uma conexão pode ficar aberta (10 min) - security.
-      maximum-pool-size: 20 # Mantemos até no máx 20 conexões com o banco de dados. O ideal é manter baixo mesmo, pois é algo custoso para o banco gerenciar. https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing
-      minimum-idle: 10
+      maximum-pool-size: 5  # Mantemos até no máx 20 conexões com o banco de dados. O ideal é manter baixo mesmo, pois é algo custoso para o banco gerenciar. https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing
+      minimum-idle: 1
       pool-name: master
   jpa:
     open-in-view: false
