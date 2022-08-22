@@ -1,7 +1,7 @@
 mysql:
   username: ${DATABASE_MYSQL_USERNAME:root}
   password: ${DATABASE_MYSQL_PASSWORD:123456}
-  schema: cad_videos
+  schema: ${DATABASE_NAME:cad_videos}
   url: ${DATABASE_MYSQL_URL:localhost:3306}
 
 spring:
