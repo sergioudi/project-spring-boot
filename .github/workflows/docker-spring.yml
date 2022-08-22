@@ -11,7 +11,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Git Checkout
+        uses: actions/checkout@v1
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+            java-version: 17
+      - name: Run migration
+        env:
+          FLYWAY_DB: ${{ secrets.FLYWAY_DB }}
+          FLYWAY_USER: ${{ secrets.FLYWAY_USER }}
+          FLYWAY_PASS: ${{ secrets.FLYWAY_PASS }}
+        run: ./gradlew flywayMigrate
       - name: Build and deploy the Docker image
         uses: gonuit/heroku-docker-deploy@v1.3.3 # GitHub action name (leave it as it is).
         with:
@@ -47,7 +58,4 @@ jobs:
           # By default, this argument is set to "web".
           # For more information look at https://devcenter.heroku.com/articles/process-model
           process_type: web
-          
-          FLYWAY_DB: ${{ secrets.FLYWAY_DB }}
-          FLYWAY_USER: ${{ secrets.FLYWAY_USER }}
-          FLYWAY_PASS: ${{ secrets.FLYWAY_PASS }}
+
