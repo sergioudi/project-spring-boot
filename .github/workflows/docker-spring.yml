@@ -13,6 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build and deploy the Docker image
+        env:
+          FLYWAY_DB: ${{ secrets.FLYWAY_DB }}
+          FLYWAY_USER: ${{ secrets.FLYWAY_USER }}
+          FLYWAY_PASS: ${{ secrets.FLYWAY_PASS }}
         uses: gonuit/heroku-docker-deploy@v1.3.3 # GitHub action name (leave it as it is).
         with:
           # Below you must provide variables for your Heroku app.
