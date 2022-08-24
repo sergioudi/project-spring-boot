@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping(value = "genres")
-@Tag(name = "Genre")
+@Tag(name = "Genres")
 public interface GenreAPI {
 
     @PostMapping(

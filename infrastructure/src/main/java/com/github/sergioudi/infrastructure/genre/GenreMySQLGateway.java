@@ -1,5 +1,6 @@
 package com.github.sergioudi.infrastructure.genre;
 
+import com.github.sergioudi.domain.category.CategoryID;
 import com.github.sergioudi.domain.genre.Genre;
 import com.github.sergioudi.domain.genre.GenreGateway;
 import com.github.sergioudi.domain.genre.GenreID;
@@ -13,8 +14,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -73,6 +76,16 @@ public class GenreMySQLGateway implements GenreGateway {
                 pageResult.getTotalElements(),
                 pageResult.map(GenreJpaEntity::toAggregate).toList()
         );
+    }
+
+    @Override
+    public List<GenreID> existsByIds(final Iterable<GenreID> genreIDs) {
+        final var ids = StreamSupport.stream(genreIDs.spliterator(), false)
+                .map(GenreID::getValue)
+                .toList();
+        return this.genreRepository.existsByIds(ids).stream()
+                .map(GenreID::from)
+                .toList();
     }
 
     private Genre save(final Genre aGenre) {
